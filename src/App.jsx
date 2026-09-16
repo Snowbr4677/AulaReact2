@@ -92,4 +92,66 @@ function App(){
     
 
   }
+  //retorna interface visual do sistema
+  return (
+
+    // conteiner principal da aplicação
+    <div style={{ padding:"20px", fontFamily: "sans-serif"}}>
+
+      {/* Titulo principal */}
+      <h1>Sistema de Previsão do tempo</h1>
+
+      {/* campo para digitação */}
+      <input 
+
+      //tipo do campo
+      
+      type="text" 
+      
+      //texto exibido dentro da caixa
+      placeholder="Digite uma cidade" 
+      
+      //valor vinculado ao estado cidade
+      value={cidade} 
+
+      //
+      onChange={(e) =>setCidade(e.target.value)}>
+      
+      </input>
+
+      {/* Botão de consulta */}
+      <button
+      // executa função de consultar clima
+      onClick={consultarClima}
+
+      //define a margem à esquerda
+      style={{
+        marginLeft:"10px"
+      }}
+      >
+        {/* Texto exibido no botao */}
+        Consultar
+      </button>
+      
+      {/* Linha horizontal para separar seçoes */}
+      <hr/>
+
+      {/* Exibe a cidade informada */}
+      <h2>Cidade: {cidade}</h2>
+      
+      {/* Exibe a temperatura*/}
+      <h2>Temperatura: {temperatura}</h2>
+      
+      {/* Exibe condição climatica*/}
+      <h2>Clima: {clima}</h2>
+      
+      {/* Exibe a umidade*/}
+      <h2>Umidade: {umidade}</h2>
+      
+    </div>
+
+  )
 }
+
+//exporta o componente App para ser utilizado no React
+export default App;
