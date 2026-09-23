@@ -18,81 +18,124 @@ function App(){
   const [umidade, setUmidade] = useState("");
 
   // Função executada quando o user clicar no botão consultar
-  function consultarClima (){
-    //verifica se a cidade digitada é são paulo
-    if(
-      cidade.toLowerCase() === "são paulo" || 
-      cidade.toLowerCase() === "sao paulo" 
-    ){
-      // atualiza temperatura
-      setTemperatura("24°C");
+  
+  // função comenta
+  // function consultarClima (){
+  //   //verifica se a cidade digitada é são paulo
+  //   if(
+  //     cidade.toLowerCase() === "são paulo" || 
+  //     cidade.toLowerCase() === "sao paulo" 
+  //   ){
+  //     // atualiza temperatura
+  //     setTemperatura("24°C");
 
-      // atualiza condição climatica
-      setClima("Ensolarado");
+  //     // atualiza condição climatica
+  //     setClima("Ensolarado");
       
-      // atualiza umidade
-      setUmidade("60%");
-    }
+  //     // atualiza umidade
+  //     setUmidade("60%");
+  //   }
 
-    else if(cidade.toLowerCase() === "curitiba"){
+  //   else if(cidade.toLowerCase() === "curitiba"){
       
-      setTemperatura("17°C");
+  //     setTemperatura("17°C");
 
-      setClima("Chuvoso");
+  //     setClima("Chuvoso");
       
-      setUmidade("85%");
-    }
+  //     setUmidade("85%");
+  //   }
 
-    else if(cidade.toLowerCase() === "guarujá" || cidade.toLowerCase() === "guaruja" ){
+  //   else if(cidade.toLowerCase() === "guarujá" || cidade.toLowerCase() === "guaruja" ){
       
-      setTemperatura("21°C");
+  //     setTemperatura("21°C");
 
-      setClima("chuvoso");
+  //     setClima("chuvoso");
       
-      setUmidade("76%");
-    }
+  //     setUmidade("76%");
+  //   }
 
-    else if(cidade.toLowerCase() === "santos"){
+  //   else if(cidade.toLowerCase() === "santos"){
       
-      setTemperatura("20°C");
+  //     setTemperatura("20°C");
 
-      setClima("Nublado");
+  //     setClima("Nublado");
       
-      setUmidade("76%");
-    }
+  //     setUmidade("76%");
+  //   }
 
-    else if(cidade.toLowerCase() === "praia grande"){
+  //   else if(cidade.toLowerCase() === "praia grande"){
       
-      setTemperatura("20°C");
+  //     setTemperatura("20°C");
 
-      setClima("Nublado");
+  //     setClima("Nublado");
       
-      setUmidade("78%");
-    }
+  //     setUmidade("78%");
+  //   }
 
-    else if(cidade.toLowerCase() === "campos do jordão" || cidade.toLowerCase() === "campos do jordao"){
+  //   else if(cidade.toLowerCase() === "campos do jordão" || cidade.toLowerCase() === "campos do jordao"){
       
-      setTemperatura("17°C");
+  //     setTemperatura("17°C");
 
-      setClima("Nublado");
+  //     setClima("Nublado");
       
-      setUmidade("81%");
-    }
+  //     setUmidade("81%");
+  //   }
 
-    // executa caso a cidade não esteja cadastrada
-    else {
+  //   // executa caso a cidade não esteja cadastrada
+  //   else {
       
-      setTemperatura("--");
+  //     setTemperatura("--");
      
-      setCidade("Cidade não cadastrada");
+  //     setCidade("Cidade não cadastrada");
 
-      setUmidade("--");
-    }
+  //     setUmidade("--");
+  //   }
 
     
 
-  }
+  // }
   //retorna interface visual do sistema
+  
+  //Função executada quando o usuario clicar no botão consultar
+  async function consultarClima(){
+    
+    //Verifica se o campo está vazio
+    if (cidade === ""){
+      alert("Digite uma cidade!");
+      return
+    }
+    try {
+      
+      //Faz a requisição para a API
+      const resposta = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${cidade}&appid=4bfbb21e87c9a59041d898636be892bf&units=metric&lang=pt_br`
+      );
+
+      //Convertea resposta para JSON
+      const dados = await resposta.json();
+      
+      //Verifica se a cidade foi encontrada
+      if (dados.cod !== 200) {
+        alert("Cidade não encontrada!");
+        return;
+      }
+
+      //Atualiza temperatura
+      setTemperatura(dados.main.temp + "°C");
+
+      //Atualiza condição climatica
+      setClima(dados.weather[0].description);
+
+      //atualiza umidade
+      setUmidade(dados.main.humidity + "%");
+
+    } catch (erro){
+      console.log(erro);
+      alert("Erro ao consultar API");
+    }
+
+  }
+
   return (
 
     // conteiner principal da aplicação
