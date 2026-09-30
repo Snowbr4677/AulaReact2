@@ -106,7 +106,7 @@ function App() {
       // Utilizando metodo POST
 
       //Faz a requisição para a API de historico de cidade
-      await fetch("https://localhost:3000/historico"),{
+      await fetch("http://localhost:3000/historico",{
 
         //Define o método HTTP utilizado
         method: "POST",
@@ -120,7 +120,7 @@ function App() {
         body: JSON.stringify({
           
           //Envia o nome da cidade consultada
-          cidade: Cidade,
+          cidade: cidade,
           
           //Envia a temperatura retornada pela API OpenWeatherMap
           temperatura: dados.main.temp + "°C",
