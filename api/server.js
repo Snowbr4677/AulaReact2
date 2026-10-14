@@ -1,43 +1,94 @@
-// importa a biblioteca Express, responsavel por criar o servidor e as rotas da API 
 import express from "express";
 
-// importa a biblioteca Cors, que permite a comunicação 
-// entre aplicações executadas em portas diferentes (React e API)
 import cors from "cors";
 
-// cria uma instancia de aplicação express
+// importa o modulo File System
+// este modulo permite ler e escrever arquivos usando JS
+import fs from "fs";
+
+// importa a conexão criada com o Firebase
+import db from "./firebase.js";
+
+
+import {
+    ref,
+    push
+} from "firebase/database";
+
 const app = express();
 
-//habilita o cors para permitir requisições vindo do react
 app.use(cors());
 
+// permite que a API receba e interprete dados no formato jsob
 app.use(express.json());
 
-// Vetor responsavel por armazenar temporariamente todas as consultas realizadas pelo usuario 
 let historico = [];
 
-// METODO GET
-//Utilizado para consultar informações já armazenadas na API
-//Rota responsavel por retornar todo o historico
+//verifica se arquivo historico.json exista
+//caso exista, os dados serão carregados para dentro do vetor historico
+if (fs.existsSync("./api/historico.json")) {
+
+    // lê o conteudo do arquivo historico.json
+    const dadosArquivo = fs.readFileSync(
+        "./api/historico.json",
+        "utf-8",
+    );
+
+    try {
+
+
+        if (dadosArquivo.trim() !== "") {
+
+            // converte JSON do arquivo para um array JS
+            historico = JSON.parse(dadosArquivo);
+
+        } else {
+
+            historico = [];
+        }
+
+    } catch {
+        historico = [];
+    }
+}
+
 app.get("/historico", (req, res) => {
-    
-    //Envia a lista completa de consultas em formato json
     res.json(historico);
 });
 
-//METODO POST
-//Utilizado para enviar informações para API
-app.post("/historico", (req, res) =>{
-
-    // Adiciona os dados recebidos pelo react ao vetor de historico
+app.post("/historico", async (req, res) => {
     historico.push(req.body);
 
-    res.json({
+
+    //Cria uma refencia chamada "historico" no banco de dados do firebase.
+    //caso ela não exista, o firebase ira cria-la automaticamente.
+    const referenciaFirebase = ref(db, "historico");
+
+    //Salva uma copia dos dados tambem no firebase
+    //Realtime Database
+    await push(referenciaFirebase, req.body);
+
+    const historicoJSON = JSON.stringify(
+        historico,
+        null,
+        2
+    );
+
+    // Salva os dados atualizados no arquivo historico.json
+    // Assim os registros permanecem armazenados mesmo apos desligar o servidor
+    fs.writeFileSync(
+        "./api/historico.json",
+        historicoJSON
+    );
+    
+    // Retorna uma mensagem informando que o registro foi salvo com sucesso 
+    res.json ({
         mensagem: "Consulta salva"
-    })
+    });
 });
 
-// Inicia a API na porta 3000
+// inicialização do servidor
+
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
 });
