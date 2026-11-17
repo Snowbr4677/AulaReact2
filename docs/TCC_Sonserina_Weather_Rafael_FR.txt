@@ -1,0 +1,655 @@
+TRABALHO DE CONCLUSÃO DE CURSO
+
+DESENVOLVIMENTO DE UMA APLICAÇÃO WEB RESPONSIVA PARA CONSULTA DE CONDIÇÕES METEOROLÓGICAS E PERSISTÊNCIA DE HISTÓRICO UTILIZANDO REACT, EXPRESS E FIREBASE
+
+Rafael FR
+
+Curso: Desenvolvimento de Sistemas
+Orientador: Marcos Scagnolato
+São Paulo
+2026
+
+
+FOLHA DE APROVAÇÃO
+
+RAFAEL FR
+
+DESENVOLVIMENTO DE UMA APLICAÇÃO WEB RESPONSIVA PARA CONSULTA DE CONDIÇÕES METEOROLÓGICAS E PERSISTÊNCIA DE HISTÓRICO UTILIZANDO REACT, EXPRESS E FIREBASE
+
+Trabalho de Conclusão de Curso apresentado como requisito parcial para conclusão do curso de Desenvolvimento de Sistemas.
+
+Orientador: Marcos Scagnolato
+
+São Paulo, 2026.
+
+Resultado: _______________________________
+
+
+RESUMO
+
+Este Trabalho de Conclusão de Curso apresenta o desenvolvimento da Sonserina Weather,
+uma aplicação web para consulta de condições meteorológicas em diferentes localidades.
+O sistema foi construído com React e Vite no front-end, Express no back-end e Firebase
+Realtime Database como mecanismo complementar de persistência. A aplicação consome dados
+da API pública OpenWeather, converte as informações recebidas para uma interface em
+português e aplica mudanças visuais de acordo com a condição climática identificada.
+Além de exibir temperatura, descrição do clima e umidade, o sistema envia cada consulta
+para uma API própria, que mantém um histórico local em arquivo JSON e realiza uma cópia
+dos registros no Firebase. O trabalho utiliza uma abordagem de desenvolvimento baseada
+em prototipação incremental, com levantamento de requisitos, modelagem da solução,
+implementação, testes funcionais e avaliação de usabilidade. Os resultados simulados
+indicam que a solução atende ao objetivo de oferecer uma consulta rápida, visualmente
+intuitiva e tecnicamente adequada para um projeto acadêmico de Desenvolvimento de
+Sistemas. Como limitações, destacam-se a ausência de autenticação, o armazenamento da
+chave de acesso no cliente e a dependência de serviços externos. Como trabalhos futuros,
+propõe-se a criação de contas de usuário, a proteção de credenciais por variáveis de
+ambiente e a inclusão de gráficos e filtros para o histórico de consultas.
+
+Palavras-chave: desenvolvimento web; React; Express; Firebase; API meteorológica;
+persistência de dados; experiência do usuário.
+
+
+ABSTRACT
+
+This Course Completion Work presents the development of Sonserina Weather, a web
+application for querying weather conditions in different locations. The system was
+built with React and Vite on the front end, Express on the back end, and Firebase
+Realtime Database as a complementary persistence mechanism. The application consumes
+data from the public OpenWeather API, converts the received information into a
+Portuguese interface, and applies visual changes according to the identified weather
+condition. Besides displaying temperature, weather description, and humidity, the
+system sends each query to its own API, which maintains a local history in a JSON file
+and creates a copy of the records in Firebase. The work uses an incremental prototyping
+approach, including requirements gathering, solution modeling, implementation,
+functional testing, and usability evaluation. Simulated results indicate that the
+solution fulfills the objective of providing a fast, intuitive, and technically
+appropriate consultation tool for an academic Systems Development project. Its main
+limitations are the lack of authentication, the client-side credential exposure, and
+the dependency on external services. Future work includes user accounts, credential
+protection through environment variables, and charts and filters for the query history.
+
+Keywords: web development; React; Express; Firebase; weather API; data persistence;
+user experience.
+
+
+SUMÁRIO
+
+1 INTRODUÇÃO
+  1.1 Contextualização
+  1.2 Problema de pesquisa
+  1.3 Objetivos
+  1.4 Justificativa
+  1.5 Organização do trabalho
+2 FUNDAMENTAÇÃO TEÓRICA
+  2.1 Aplicações web modernas
+  2.2 React e componentização
+  2.3 APIs REST e integração de serviços
+  2.4 Persistência de dados
+  2.5 Experiência do usuário e design responsivo
+3 METODOLOGIA
+  3.1 Natureza da pesquisa
+  3.2 Procedimentos adotados
+  3.3 Tecnologias utilizadas
+  3.4 Critérios de avaliação
+4 ANÁLISE E MODELAGEM DO SISTEMA
+  4.1 Visão geral da solução
+  4.2 Requisitos funcionais
+  4.3 Requisitos não funcionais
+  4.4 Fluxo principal
+  4.5 Modelo de dados
+5 DESENVOLVIMENTO DA APLICAÇÃO
+  5.1 Estrutura do projeto
+  5.2 Interface em React
+  5.3 Consulta à OpenWeather
+  5.4 API própria com Express
+  5.5 Persistência local e Firebase
+  5.6 Identidade visual e responsividade
+6 TESTES E RESULTADOS
+  6.1 Plano de testes
+  6.2 Resultados funcionais
+  6.3 Avaliação de usabilidade
+  6.4 Discussão dos resultados
+7 LIMITAÇÕES E TRABALHOS FUTUROS
+8 CONSIDERAÇÕES FINAIS
+REFERÊNCIAS
+APÊNDICE A - EXEMPLO DE REGISTRO DE CONSULTA
+APÊNDICE B - ROTEIRO DE EXECUÇÃO DO PROJETO
+
+
+1 INTRODUÇÃO
+
+1.1 Contextualização
+
+Aplicações de consulta meteorológica fazem parte da rotina de pessoas que precisam
+planejar deslocamentos, atividades ao ar livre, viagens e tarefas profissionais.
+Embora existam diversos serviços consolidados, a construção de uma solução própria
+oferece uma oportunidade prática para compreender integração de APIs, gerenciamento
+de estado, comunicação entre front-end e back-end e persistência de informações.
+
+Este trabalho apresenta a construção da Sonserina Weather, sistema desenvolvido a
+partir do projeto disponível no repositório "snowbr4677/aulareact2". A proposta
+combina uma interface temática com uma função objetiva: consultar o clima de uma
+cidade e apresentar os principais dados de maneira clara. O nome da aplicação é uma
+escolha visual fictícia do projeto e não representa vínculo com uma instituição ou
+marca real.
+
+O front-end foi desenvolvido em React, utilizando o Vite como ferramenta de
+desenvolvimento. A aplicação realiza uma consulta à OpenWeather, interpreta os dados
+recebidos e atualiza a tela sem recarregar a página. Em seguida, a consulta é enviada
+para uma API desenvolvida com Express. O servidor guarda os registros no arquivo
+"api/historico.json" e também envia uma cópia para o Firebase Realtime Database.
+
+1.2 Problema de pesquisa
+
+Como desenvolver uma aplicação web simples, responsiva e visualmente atrativa que
+permita consultar informações meteorológicas em tempo real e registrar o histórico
+dessas consultas por meio de uma arquitetura composta por front-end, API própria e
+serviço de banco de dados em nuvem?
+
+1.3 Objetivos
+
+1.3.1 Objetivo geral
+
+Desenvolver uma aplicação web para consulta de condições meteorológicas, integrando
+React, uma API externa, uma API própria em Express e persistência complementar no
+Firebase.
+
+1.3.2 Objetivos específicos
+
+a) Criar uma interface de consulta de cidades com atualização dinâmica;
+b) Consumir dados meteorológicos da API OpenWeather;
+c) Exibir temperatura, localidade, descrição climática e umidade;
+d) Alterar o tema visual de acordo com a condição do tempo;
+e) Implementar uma rota POST para registrar as consultas realizadas;
+f) Persistir os registros em arquivo JSON e no Firebase Realtime Database;
+g) Validar os fluxos principais por meio de testes funcionais;
+h) Documentar as decisões técnicas e as limitações da solução.
+
+1.4 Justificativa
+
+O projeto é relevante por reunir conceitos fundamentais do desenvolvimento de
+sistemas em uma aplicação de pequeno porte e com resultado visual imediato. A
+integração entre uma interface reativa e serviços externos permite demonstrar o
+funcionamento de estados, requisições assíncronas, tratamento de erros, rotas HTTP
+e persistência. Além disso, o histórico de consultas introduz uma preocupação
+realista com armazenamento de dados, permitindo comparar uma estratégia local com
+uma estratégia em nuvem.
+
+Do ponto de vista acadêmico, a aplicação funciona como um estudo aplicado de
+arquitetura em camadas. Do ponto de vista do usuário, a interface reduz a quantidade
+de informações apresentadas simultaneamente e prioriza uma resposta rápida para uma
+tarefa bem definida.
+
+1.5 Organização do trabalho
+
+O Capítulo 2 apresenta a fundamentação teórica. O Capítulo 3 descreve a metodologia.
+O Capítulo 4 detalha a análise e a modelagem. O Capítulo 5 apresenta a implementação.
+O Capítulo 6 reúne testes e resultados simulados. O Capítulo 7 discute limitações e
+melhorias futuras. Por fim, o Capítulo 8 apresenta as considerações finais.
+
+
+2 FUNDAMENTAÇÃO TEÓRICA
+
+2.1 Aplicações web modernas
+
+Aplicações web modernas são executadas em navegadores e normalmente são compostas
+por uma camada de apresentação, serviços de aplicação e mecanismos de persistência.
+Essa separação permite que cada parte evolua de forma independente e facilita a
+manutenção. Em uma aplicação de consulta meteorológica, o navegador é responsável
+pela interação, o servidor pode organizar o recebimento de dados e o banco armazena
+informações que precisam permanecer disponíveis.
+
+O modelo utilizado neste projeto é adequado a uma aplicação acadêmica porque utiliza
+tecnologias amplamente conhecidas e permite observar o caminho completo de uma
+informação: entrada do usuário, consulta externa, transformação dos dados, resposta
+visual e registro persistente.
+
+2.2 React e componentização
+
+React é uma biblioteca para construção de interfaces baseada em componentes. Um
+componente reúne estrutura, comportamento e, quando necessário, estado. No projeto,
+o componente principal mantém estados para a cidade informada, temperatura,
+descrição, umidade, ícone, condição visual e carregamento.
+
+O gerenciamento de estado permite que a interface seja atualizada quando uma
+requisição termina. A função "consultarClima" concentra a sequência de ações:
+validar a entrada, iniciar o carregamento, consultar a API, atualizar os dados da
+tela, registrar a consulta e encerrar o carregamento. O uso de um formulário também
+permite executar a busca pelo botão ou pela tecla Enter.
+
+2.3 APIs REST e integração de serviços
+
+Uma API REST disponibiliza recursos por meio de requisições HTTP. No projeto, a
+rota GET "/historico" retorna o conjunto de registros locais e a rota POST
+"/historico" recebe uma nova consulta. O formato JSON é utilizado tanto na
+comunicação entre o navegador e o servidor quanto na persistência local.
+
+A OpenWeather representa um serviço externo. A aplicação envia a cidade, uma chave
+de acesso e parâmetros de idioma e unidade de medida. A resposta é convertida em
+dados mais simples para a interface. Essa integração exige tratamento de erros de
+rede, respostas de cidade inexistente e situações em que os serviços não estejam
+disponíveis.
+
+2.4 Persistência de dados
+
+Persistência é o armazenamento de dados para que eles possam ser recuperados
+posteriormente. Neste trabalho são usadas duas formas. A primeira é o arquivo
+JSON, que funciona como uma persistência local simples e facilita a execução em
+ambiente de aula. A segunda é o Firebase Realtime Database, utilizado como uma
+cópia em nuvem dos registros.
+
+Essa combinação atende ao caráter demonstrativo do projeto, mas não deve ser
+interpretada como uma estratégia definitiva para produção. Em um cenário real,
+seria necessário definir regras de acesso, autenticação, concorrência, validação
+de dados, políticas de backup e tratamento de falhas de sincronização.
+
+2.5 Experiência do usuário e design responsivo
+
+Uma interface eficiente deve apresentar os dados importantes com pouca fricção.
+Na Sonserina Weather, o usuário encontra um campo de busca e um botão de consulta
+na área central. Após a resposta, a aplicação mostra o local, a temperatura, o
+ícone, a descrição e a umidade.
+
+O design responsivo permite que o card central se ajuste a diferentes larguras.
+O CSS utiliza unidades relativas, flexbox, limite de largura e elementos com
+contraste elevado. A mudança de fundo de acordo com o clima cria uma relação visual
+entre o dado recebido e sua representação, sem alterar a finalidade da aplicação.
+
+
+3 METODOLOGIA
+
+3.1 Natureza da pesquisa
+
+Esta pesquisa é aplicada, exploratória e de abordagem qualitativa, pois busca
+resolver uma necessidade prática de consulta e registro de dados, explorando
+tecnologias de desenvolvimento web e observando o comportamento da solução.
+Os dados apresentados nos testes deste documento são fictícios e foram criados
+exclusivamente para exemplificar a documentação do projeto.
+
+3.2 Procedimentos adotados
+
+O desenvolvimento foi organizado nas seguintes etapas:
+
+1. Levantamento do objetivo da aplicação e definição do público-alvo.
+2. Identificação dos dados meteorológicos necessários.
+3. Criação da interface inicial em React.
+4. Integração com a API OpenWeather.
+5. Implementação da API própria com Express.
+6. Adição da persistência em arquivo JSON e Firebase.
+7. Criação de temas visuais para diferentes condições climáticas.
+8. Execução de testes funcionais e revisão da documentação.
+
+Foi utilizado um processo incremental. Cada etapa produziu uma versão utilizável,
+permitindo verificar a integração antes de acrescentar a próxima camada.
+
+3.3 Tecnologias utilizadas
+
+Tecnologia             Função no projeto
+React                  Construção da interface e gerenciamento de estados
+Vite                   Servidor de desenvolvimento e empacotamento
+JavaScript             Linguagem principal da aplicação
+Express                Criação da API própria
+Node.js                Ambiente de execução do servidor
+OpenWeather             Fonte externa de dados meteorológicos
+Firebase Realtime DB    Persistência complementar em nuvem
+JSON                    Persistência local e formato de comunicação
+CSS                     Layout, responsividade e temas visuais
+Git/GitHub              Versionamento e hospedagem do código
+
+3.4 Critérios de avaliação
+
+Foram definidos quatro critérios principais:
+
+a) funcionalidade: a busca deve retornar e exibir os dados esperados;
+b) integração: a consulta deve ser enviada à API própria;
+c) persistência: o registro deve ser escrito no histórico local;
+d) usabilidade: o fluxo deve ser compreensível para um usuário iniciante.
+
+Como não foram utilizados dados de usuários reais, a avaliação de usabilidade
+descrita neste TCC é simulada e não deve ser considerada um estudo estatístico.
+
+
+4 ANÁLISE E MODELAGEM DO SISTEMA
+
+4.1 Visão geral da solução
+
+O sistema é composto por três elementos principais:
+
+1. Cliente web: interface React executada no navegador.
+2. API de aplicação: servidor Express que recebe e registra consultas.
+3. Serviços de dados: OpenWeather como fonte meteorológica e Firebase como
+   persistência complementar.
+
+Fluxo resumido:
+
+Usuário -> formulário React -> OpenWeather -> tratamento dos dados -> interface
+                         \-> POST /historico -> arquivo JSON e Firebase
+
+4.2 Requisitos funcionais
+
+RF01 - Permitir que o usuário informe o nome de uma cidade.
+RF02 - Impedir o envio quando o campo estiver vazio.
+RF03 - Consultar as condições meteorológicas da localidade.
+RF04 - Exibir nome da cidade e país retornados pelo serviço.
+RF05 - Exibir temperatura em graus Celsius.
+RF06 - Exibir descrição do clima em português.
+RF07 - Exibir percentual de umidade.
+RF08 - Exibir ícone correspondente à condição climática.
+RF09 - Aplicar um tema visual para sol, chuva, neve ou tempo nublado.
+RF10 - Registrar uma consulta por meio da rota POST "/historico".
+RF11 - Permitir a leitura do histórico pela rota GET "/historico".
+RF12 - Manter uma cópia dos registros no Firebase Realtime Database.
+
+4.3 Requisitos não funcionais
+
+RNF01 - A interface deve ser acessível por navegador moderno.
+RNF02 - A aplicação deve se adaptar a telas menores.
+RNF03 - As mensagens de erro devem orientar o usuário.
+RNF04 - A consulta deve apresentar um estado visual de carregamento.
+RNF05 - Os dados trocados entre cliente e API devem utilizar JSON.
+RNF06 - O código deve ser organizado em arquivos de responsabilidade clara.
+RNF07 - O sistema deve continuar inicializando quando o histórico local estiver vazio.
+
+4.4 Fluxo principal
+
+1. O usuário acessa a página inicial.
+2. O sistema exibe o formulário de consulta.
+3. O usuário digita uma cidade e envia o formulário.
+4. O React verifica se o campo contém texto.
+5. O botão é desabilitado durante o carregamento.
+6. A aplicação consulta a OpenWeather.
+7. O retorno é validado e transformado.
+8. A interface exibe os dados climáticos.
+9. A aplicação envia um objeto JSON à API Express.
+10. O servidor grava o objeto no histórico local e no Firebase.
+11. O botão volta ao estado normal.
+
+4.5 Modelo de dados
+
+Cada registro de histórico utiliza a estrutura:
+
+{
+  "cidade": "São Paulo",
+  "temperatura": "23.5°C",
+  "clima": "céu limpo",
+  "umidade": "68%"
+}
+
+O campo "cidade" representa a entrada informada pelo usuário. "temperatura",
+"clima" e "umidade" são derivados da resposta da API meteorológica. Em uma versão
+posterior, recomenda-se adicionar data e hora, coordenadas, país, identificador do
+usuário e origem do registro.
+
+
+5 DESENVOLVIMENTO DA APLICAÇÃO
+
+5.1 Estrutura do projeto
+
+A organização observada no repositório é:
+
+src/App.jsx       Componente principal e regras de interação
+src/App.css       Estilos da interface e temas meteorológicos
+src/index.css     Estilos globais
+src/main.jsx      Ponto de entrada da aplicação React
+api/server.js     API Express e persistência do histórico
+api/firebase.js   Configuração da conexão com Firebase
+api/historico.json Histórico local de consultas
+package.json      Dependências e scripts do projeto
+vite.config.js    Configuração do Vite
+
+5.2 Interface em React
+
+O componente principal utiliza o hook useState para armazenar os valores necessários
+à tela. A cidade digitada permanece ligada ao campo de entrada, enquanto os dados
+retornados ficam separados em estados específicos. Essa divisão permite que cada
+parte da interface seja atualizada sem criar uma estrutura de dados excessivamente
+complexa.
+
+O formulário utiliza o evento onSubmit, o que torna o fluxo compatível com clique
+e teclado. O estado "carregando" altera o texto do botão para "Invocando..." e
+impede novas requisições enquanto a consulta anterior está em andamento.
+
+5.3 Consulta à OpenWeather
+
+A função de consulta adiciona o código "BR" quando a cidade não informa um país.
+A requisição utiliza unidades métricas e idioma português. Depois da resposta, o
+sistema valida o código retornado. Quando a cidade não é localizada, uma mensagem
+é apresentada ao usuário e o fluxo é encerrado sem registrar uma consulta inválida.
+
+A temperatura é arredondada para facilitar a leitura. O grupo meteorológico
+principal é usado pela função "identificarTema", que classifica a condição como
+neve, chuva, sol, nublado ou padrão.
+
+5.4 API própria com Express
+
+O arquivo "api/server.js" cria uma aplicação Express, habilita CORS e configura
+o middleware para interpretar JSON. A rota GET retorna o vetor de histórico.
+A rota POST adiciona o corpo recebido ao vetor, envia uma cópia ao Firebase,
+transforma o vetor em texto JSON e atualiza o arquivo local.
+
+A API representa uma camada intermediária importante. Ela impede que a interface
+precise conhecer diretamente todas as regras de persistência e permite que novos
+clientes sejam adicionados futuramente, como uma aplicação mobile.
+
+5.5 Persistência local e Firebase
+
+Na inicialização, o servidor verifica se "api/historico.json" existe. Caso exista,
+o conteúdo é lido e convertido para um vetor. Se o arquivo estiver vazio, o sistema
+começa com uma lista vazia. Depois de uma nova consulta, o arquivo é reescrito com
+indentação de dois espaços, facilitando sua leitura durante as aulas.
+
+O Firebase é utilizado com uma referência chamada "historico". O método push cria
+um registro com identificador próprio. Essa escolha evita que uma nova consulta
+substitua registros anteriores. Para produção, seria necessário configurar regras
+de segurança, validar os campos e definir o comportamento quando a gravação no
+Firebase falhar depois que o arquivo local já tiver sido atualizado.
+
+5.6 Identidade visual e responsividade
+
+O CSS utiliza uma paleta inspirada em tons esmeralda, prata e preto. A interface
+possui um card central com transparência, bordas suaves e efeitos de desfoque. As
+classes "padrao", "chuva", "neve", "sol" e "nublado" alteram o fundo conforme o
+resultado recebido.
+
+As imagens de fundo e os ícones tornam a aplicação mais expressiva, mas são
+elementos secundários. A informação textual continua disponível para garantir que
+o usuário consiga interpretar o resultado mesmo quando um recurso visual não
+carregar.
+
+
+6 TESTES E RESULTADOS
+
+6.1 Plano de testes
+
+Os testes foram definidos com base nos requisitos funcionais. Cada caso foi
+executado de forma simulada em ambiente local, utilizando cidades conhecidas e
+respostas representativas. Os resultados abaixo são fictícios e servem para
+exemplificar a documentação acadêmica.
+
+ID   Cenário                              Resultado esperado
+T01  Campo vazio                         Mensagem de preenchimento
+T02  Cidade válida                       Dados exibidos na tela
+T03  Cidade inexistente                  Mensagem de cidade não encontrada
+T04  Consulta com tecla Enter            Formulário enviado
+T05  Estado de carregamento              Botão temporariamente desabilitado
+T06  Registro após consulta              POST enviado para /historico
+T07  Leitura do histórico                GET retorna JSON
+T08  Clima com chuva                     Tema de chuva aplicado
+T09  Clima com céu limpo                 Tema de sol aplicado
+T10  Histórico inicialmente vazio        Servidor inicia sem interromper
+
+6.2 Resultados funcionais
+
+No cenário T01, a validação impediu a chamada externa e solicitou que o usuário
+informasse uma cidade. Nos cenários T02, T08 e T09, os dados foram apresentados
+e o tema foi ajustado conforme o grupo climático. No cenário T03, a resposta
+inválida não gerou registro no histórico.
+
+Nos cenários T06 e T07, a API própria recebeu e retornou objetos JSON. O arquivo
+local permaneceu legível após a inclusão de novos registros. Para o cenário T10,
+o servidor foi capaz de iniciar com uma lista vazia, comportamento importante para
+a primeira execução do projeto.
+
+6.3 Avaliação de usabilidade
+
+Foi criada uma avaliação simulada com cinco participantes fictícios, identificados
+apenas como P1 a P5. Cada participante deveria consultar uma cidade e explicar o
+que havia acontecido após clicar em "Consultar".
+
+Participante  Tarefa concluída  Observação
+P1            Sim                Identificou o campo imediatamente
+P2            Sim                Utilizou a tecla Enter
+P3            Sim                Compreendeu a unidade Celsius
+P4            Sim                Identificou a umidade no painel
+P5            Sim                Reconheceu a mudança visual do clima
+
+O resultado simulado indica que o fluxo principal é curto e compreensível. A
+principal sugestão levantada foi substituir algumas mensagens temáticas por textos
+mais neutros em uma versão voltada a um público amplo.
+
+6.4 Discussão dos resultados
+
+Os resultados indicam que a arquitetura atende ao escopo definido. A separação
+entre interface e API simplifica a manutenção e cria uma base para futuras
+funcionalidades. O tema dinâmico é um diferencial de experiência, pois transforma
+um valor técnico em uma resposta visual.
+
+Apesar disso, o projeto ainda depende de serviços externos e não possui mecanismos
+de autenticação ou controle de acesso. O uso de arquivo JSON é apropriado para
+aprendizagem, mas apresenta limitações quando múltiplas requisições são realizadas
+simultaneamente. Também é necessário reforçar a validação antes de considerar a
+aplicação pronta para uso real.
+
+
+7 LIMITAÇÕES E TRABALHOS FUTUROS
+
+As principais limitações identificadas são:
+
+a) dependência da disponibilidade da OpenWeather;
+b) dependência de conexão com a internet para consulta e ícones;
+c) ausência de autenticação de usuários;
+d) ausência de validação de esquema no servidor;
+e) persistência local baseada em arquivo JSON;
+f) tratamento limitado de falhas de sincronização com o Firebase;
+g) necessidade de proteger credenciais por variáveis de ambiente;
+h) histórico sem tela de consulta e sem filtros na interface;
+i) ausência de testes automatizados;
+j) conteúdo visual temático ainda não possui opção de acessibilidade.
+
+Como trabalhos futuros, são propostas as seguintes melhorias:
+
+1. Criar uma tela própria para visualização do histórico.
+2. Adicionar data, hora, coordenadas e país a cada registro.
+3. Implementar autenticação com diferentes perfis de usuário.
+4. Mover chaves e configurações sensíveis para variáveis de ambiente.
+5. Adotar validação de entrada com um esquema no servidor.
+6. Substituir o arquivo JSON por um banco estruturado em produção.
+7. Adicionar testes unitários, de integração e de interface.
+8. Incluir gráficos de temperatura e umidade ao longo do tempo.
+9. Disponibilizar tema de alto contraste e suporte ampliado a leitores de tela.
+10. Implementar cache para reduzir requisições repetidas à API externa.
+
+
+8 CONSIDERAÇÕES FINAIS
+
+Este trabalho apresentou o desenvolvimento da Sonserina Weather, uma aplicação web
+de consulta meteorológica integrada a serviços externos e mecanismos de persistência.
+O projeto alcançou o objetivo geral ao permitir que o usuário informe uma cidade,
+consulte dados climáticos, visualize uma resposta adaptada e registre a operação.
+
+A implementação demonstrou, em um único produto, conceitos de React, gerenciamento
+de estado, requisições assíncronas, consumo de API, criação de rotas Express,
+manipulação de JSON, integração com Firebase e construção de layouts responsivos.
+A aplicação também evidenciou que uma solução simples pode ser organizada em camadas
+e evoluir de um protótipo acadêmico para uma arquitetura mais robusta.
+
+Os resultados simulados foram positivos para o escopo proposto. Entretanto, o sistema
+não deve ser considerado finalizado para produção sem melhorias de segurança,
+validação, observabilidade, acessibilidade e persistência. A documentação dessas
+limitações é parte importante do trabalho, pois demonstra que o desenvolvimento de
+sistemas envolve tanto a entrega da funcionalidade quanto a análise crítica de seus
+riscos e possibilidades de evolução.
+
+
+REFERÊNCIAS
+
+FACEBOOK. React documentation. Disponível em: https://react.dev/. Acesso em:
+17 nov. 2026.
+
+FIREBASE. Firebase Realtime Database documentation. Disponível em:
+https://firebase.google.com/docs/database. Acesso em: 17 nov. 2026.
+
+OPENWEATHER. Current weather data. Disponível em:
+https://openweathermap.org/current. Acesso em: 17 nov. 2026.
+
+EXPRESS. Express web framework documentation. Disponível em:
+https://expressjs.com/. Acesso em: 17 nov. 2026.
+
+VITE. Vite guide. Disponível em: https://vite.dev/guide/. Acesso em:
+17 nov. 2026.
+
+MDN WEB DOCS. Fetch API. Disponível em:
+https://developer.mozilla.org/docs/Web/API/Fetch_API. Acesso em: 17 nov. 2026.
+
+SNOWBR4677. Aulareact2: projeto Sonserina Weather. GitHub, 2026. Repositório
+utilizado como base prática deste trabalho.
+
+
+APÊNDICE A - EXEMPLO DE REGISTRO DE CONSULTA
+
+Exemplo fictício de conteúdo salvo em api/historico.json:
+
+[
+  {
+    "cidade": "São Paulo",
+    "temperatura": "23.5°C",
+    "clima": "céu limpo",
+    "umidade": "68%"
+  },
+  {
+    "cidade": "Curitiba",
+    "temperatura": "16.2°C",
+    "clima": "chuva leve",
+    "umidade": "82%"
+  }
+]
+
+Os valores acima são meramente ilustrativos e não representam uma consulta real
+realizada na data de entrega deste documento.
+
+
+APÊNDICE B - ROTEIRO DE EXECUÇÃO DO PROJETO
+
+Pré-requisitos:
+
+- Node.js instalado;
+- acesso à internet para a API meteorológica;
+- dependências instaladas com npm install;
+- configuração válida do Firebase para persistência em nuvem.
+
+Execução do front-end:
+
+1. Abrir um terminal na raiz do projeto.
+2. Executar npm install.
+3. Executar npm run dev.
+4. Acessar o endereço informado pelo Vite.
+
+Execução da API:
+
+1. Abrir outro terminal na raiz do projeto.
+2. Executar node api/server.js.
+3. Confirmar a mensagem de inicialização na porta 3000.
+
+Validação rápida:
+
+1. Informar uma cidade no formulário.
+2. Clicar em "Consultar".
+3. Conferir temperatura, descrição e umidade.
+4. Conferir se um novo registro foi incluído em api/historico.json.
+
+Observação:
+
+Este TCC é um exemplo acadêmico com conteúdo parcialmente fictício. Os resultados,
+participantes e métricas apresentados no Capítulo 6 foram criados para demonstrar
+como a documentação poderia ser estruturada e não devem ser apresentados como
+evidências de uma pesquisa real sem a execução e coleta correspondentes.
